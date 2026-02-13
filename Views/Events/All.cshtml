@@ -1,0 +1,120 @@
+﻿@model EventSearchViewModel
+
+@{
+    ViewData["Title"] = "All Events";
+}
+
+<div class="evt-page-wrapper">
+
+    <div class="evt-header">
+        <h2>Discover Events</h2>
+        <p style="color: var(--evt-text-muted);">Explore the latest concerts, workshops, and exhibitions.</p>
+    </div>
+
+    <div class="evt-search-container">
+        <form method="get" asp-action="All" class="evt-search-form">
+
+            <div class="evt-input-group">
+                <i class="fas fa-tag evt-icon"></i>
+                <input type="text" class="evt-input" name="searchCategory" placeholder="Category (e.g. Music)" value="@Model.SearchCategory" />
+            </div>
+
+            <div class="evt-input-group">
+                <i class="fas fa-map-marker-alt evt-icon"></i>
+                <input type="text" class="evt-input" name="searchLocation" placeholder="Location" value="@Model.SearchLocation" />
+            </div>
+
+            <div class="evt-input-group">
+                <i class="fas fa-calendar evt-icon"></i>
+                <input type="date" class="evt-input" name="searchDate" value="@(Model.SearchDate?.ToString("yyyy-MM-dd"))" style="padding-left:40px;" />
+            </div>
+
+            <div class="evt-input-group">
+                <i class="fas fa-dollar-sign evt-icon"></i>
+                <input type="number" step="0.01" class="evt-input" name="maxPrice" placeholder="Max Price" value="@Model.MaxPrice" />
+            </div>
+
+            <button type="submit" class="evt-btn-search">Search</button>
+
+        </form>
+    </div>
+
+    <div class="evt-grid">
+
+        @if (Model.Events != null && Model.Events.Any())
+        {
+            foreach (var ev in Model.Events)
+            {
+                <div class="evt-card">
+                    <div class="evt-img-wrapper">
+                        <img src="@ev.ImageUrl" alt="@ev.Title" class="evt-img" />
+                        <span class="evt-category-badge">@ev.Category</span>
+                        <div class="evt-price-tag">$@ev.Price</div>
+                    </div>
+
+                    <div class="evt-card-body">
+                        <div class="evt-date">@ev.EventDate.ToString("MMM dd, yyyy • h:mm tt")</div>
+                        <h3 class="evt-title">@ev.Title</h3>
+
+                        <div class="evt-location">
+                            <i class="fas fa-map-pin"></i>
+                            <span>@ev.Location</span>
+                        </div>
+
+                        <div class="evt-card-footer">
+                            <a href="#" class="evt-btn-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--evt-text-muted);">
+                <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                <p>No events found matching your search.</p>
+                <a href="@Url.Action("All")" style="color: var(--evt-accent); text-decoration: none;">Clear Filters</a>
+            </div>
+
+            <div class="evt-card">
+                <div class="evt-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Demo Event" class="evt-img" />
+                    <span class="evt-category-badge">Music</span>
+                    <div class="evt-price-tag">$45.00</div>
+                </div>
+                <div class="evt-card-body">
+                    <div class="evt-date">OCT 15, 2026 • 8:00 PM</div>
+                    <h3 class="evt-title">Neon Jazz Night</h3>
+                    <div class="evt-location">
+                        <i class="fas fa-map-pin"></i>
+                        <span>Blue Note Club, Metro City</span>
+                    </div>
+                    <div class="evt-card-footer">
+                        <a href="#" class="evt-btn-details">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="evt-card">
+                <div class="evt-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Demo Event" class="evt-img" />
+                    <span class="evt-category-badge">Workshop</span>
+                    <div class="evt-price-tag">$20.00</div>
+                </div>
+                <div class="evt-card-body">
+                    <div class="evt-date">NOV 02, 2026 • 10:00 AM</div>
+                    <h3 class="evt-title">Digital Art Masterclass</h3>
+                    <div class="evt-location">
+                        <i class="fas fa-map-pin"></i>
+                        <span>Innovation Hub, Room 4B</span>
+                    </div>
+                    <div class="evt-card-footer">
+                        <a href="#" class="evt-btn-details">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+</div>

@@ -1,0 +1,106 @@
+﻿@model SmartEventManagement_TicketingSystem.Areas.Identity.Data.SmartEventManagement_TicketingSystemUser
+
+@{
+    ViewData["Title"] = "My Profile";
+    Layout = "~/Views/Shared/_MemberLayout.cshtml";
+    var selected = Model?.EventPreferences?.Split(',') ?? new string[] { };
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<div class="mem-profile-content">
+
+    <div class="mem-profile-header">
+        <h2>My Profile</h2>
+        <p class="mem-profile-desc">Update your personal details and manage your account settings.</p>
+    </div>
+
+    @if (ViewBag.Success != null)
+    {
+        <div class="mem-alert-success">
+            <i class="fas fa-check-circle" style="font-size: 1.2rem;"></i>
+            <span>@ViewBag.Success</span>
+        </div>
+    }
+
+    <div class="mem-card">
+        <form asp-action="Profile" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mem-form-grid">
+
+                <div class="mem-input-group">
+                    <label class="mem-label"><i class="fas fa-user"></i> Full Name</label>
+                    <input asp-for="FullName" class="mem-input" placeholder="e.g. John Doe" />
+                </div>
+
+                <div class="mem-input-group">
+                    <label class="mem-label"><i class="fas fa-envelope"></i> Email Address</label>
+                    <div style="position: relative;">
+                        <input value="@Model.Email" class="mem-input" readonly />
+                        <i class="fas fa-lock" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--mem-text-muted); font-size: 0.8rem;"></i>
+                    </div>
+                </div>
+
+                <div class="mem-input-group">
+                    <label class="mem-label"><i class="fas fa-phone"></i> Phone Number</label>
+                    <input asp-for="PhoneNumber" class="mem-input" placeholder="+1 (555) 000-0000" />
+                </div>
+
+                <div class="mem-input-group">
+                    <label class="mem-label"><i class="fas fa-map-marker-alt"></i> City / Location</label>
+                    <input asp-for="City" class="mem-input" placeholder="e.g. Metro City" />
+                </div>
+
+                <div class="mem-input-group full-width">
+                    <label class="mem-label"><i class="fas fa-pen-fancy"></i> Bio</label>
+                    <textarea asp-for="Bio" class="mem-input" placeholder="Share a little bit about yourself..."></textarea>
+                </div>
+
+                <div class="mem-input-group full-width">
+                    <label class="mem-label"><i class="fas fa-layer-group"></i> Event Preferences</label>
+
+                    <div class="mem-pref-grid">
+
+                        <label class="mem-pref-tile">
+                            <input type="checkbox" name="preferences" value="Music" @(selected.Contains("Music") ? "checked" : "") />
+                            <span class="mem-pref-text">🎵 Music</span>
+                        </label>
+
+                        <label class="mem-pref-tile">
+                            <input type="checkbox" name="preferences" value="Theatre" @(selected.Contains("Theatre") ? "checked" : "") />
+                            <span class="mem-pref-text">🎭 Theatre</span>
+                        </label>
+
+                        <label class="mem-pref-tile">
+                            <input type="checkbox" name="preferences" value="Art" @(selected.Contains("Art") ? "checked" : "") />
+                            <span class="mem-pref-text">🎨 Art</span>
+                        </label>
+
+                        <label class="mem-pref-tile">
+                            <input type="checkbox" name="preferences" value="Workshops" @(selected.Contains("Workshops") ? "checked" : "") />
+                            <span class="mem-pref-text">💡 Workshops</span>
+                        </label>
+
+                        <label class="mem-pref-tile">
+                            <input type="checkbox" name="preferences" value="Sports" @(selected.Contains("Sports") ? "checked" : "") />
+                            <span class="mem-pref-text">🏐 Sports</span>
+                        </label>
+
+                        <label class="mem-pref-tile">
+                            <input type="checkbox" name="preferences" value="Cinema" @(selected.Contains("Cinema") ? "checked" : "") />
+                            <span class="mem-pref-text">🎥 Cinema</span>
+                        </label>
+
+                    </div>
+                </div>
+
+                <div class="mem-btn-container">
+                    <button type="submit" class="mem-btn-save">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div> 

@@ -1,0 +1,75 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+@using SmartEventManagement_TicketingSystem.Areas.Identity.Data
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="member-dashboard-wrapper">
+
+    <div class="member-orb member-orb-1"></div>
+    <div class="member-orb member-orb-2"></div>
+
+    <!-- 🔥 SIDEBAR -->
+    <aside class="member-sidebar">
+
+        <div class="member-sidebar-header">
+            <h3>Member Panel</h3>
+        </div>
+
+        <ul class="member-nav-list">
+
+            <li class="member-nav-item">
+                <a asp-controller="MemberDashboard"
+                   asp-action="Index"
+                   class="@(currentAction == "Index" ? "active" : "")">
+                    <i class="fas fa-chart-line" style="width:20px;"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li class="member-nav-item">
+                <a asp-controller="MemberDashboard"
+                   asp-action="Profile"
+                   class="@(currentAction == "Profile" ? "active" : "")">
+                    <i class="fas fa-user-circle" style="width:20px;"></i>
+                    My Profile
+                </a>
+            </li>
+
+            <li class="member-nav-item">
+                <a asp-controller="MemberDashboard"
+                   asp-action="Booked"
+                   class="@(currentAction == "Booked" ? "active" : "")">
+                    <i class="fas fa-ticket-alt" style="width:20px;"></i>
+                    My Tickets
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="member-sidebar-footer">
+            <ul class="member-nav-list">
+                <li class="member-nav-item">
+                    <a asp-area="Identity"
+                       asp-page="/Account/Logout">
+                        <i class="fas fa-sign-out-alt" style="width:20px;"></i>
+                        Sign Out
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </aside>
+
+    <!-- 🔥 PAGE CONTENT -->
+    <div class="member-main-content">
+        @RenderBody()
+    </div>
+
+</div>
+
+@RenderSection("Scripts", required: false)

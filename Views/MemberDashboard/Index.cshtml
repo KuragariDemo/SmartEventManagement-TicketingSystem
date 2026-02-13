@@ -1,0 +1,35 @@
+﻿@model SmartEventManagement_TicketingSystem.Areas.Identity.Data.SmartEventManagement_TicketingSystemUser
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_MemberLayout.cshtml";
+    
+}
+
+<div class="member-welcome-card">
+    <div class="member-welcome-text">
+        <h2>Welcome back, @Model.FullName 👋</h2>
+        <p>Explore the latest cultural events happening in the city.</p>
+    </div>
+    <div class="member-badge">PREMIUM MEMBER</div>
+</div>
+
+<div class="member-stats-grid">
+    <div class="member-stat-card">
+        <div class="member-stat-icon"><i class="fas fa-ticket-alt"></i></div>
+        <div class="member-stat-value">3</div>
+        <div class="member-stat-label">Active Tickets</div>
+    </div>
+
+    <div class="member-stat-card">
+        <div class="member-stat-icon"><i class="fas fa-heart"></i></div>
+        <div class="member-stat-value">12</div>
+        <div class="member-stat-label">Events Liked</div>
+    </div>
+
+    <div class="member-stat-card">
+        <div class="member-stat-icon"><i class="fas fa-calendar-check"></i></div>
+        <div class="member-stat-value">5</div>
+        <div class="member-stat-label">Events Attended</div>
+    </div>
+</div>

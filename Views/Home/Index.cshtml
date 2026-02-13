@@ -1,0 +1,129 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Experience The<br>Extraordinary</h1>
+        <p>Your exclusive pass to the city's most vibrant concerts, arts, and nightlife. Don't just watch—be part of the moment.</p>
+        <a href="#upcoming" class="hero-btn">Browse Events</a>
+    </div>
+</section>
+
+<section class="featured-section" id="featured">
+    <div class="section-header">
+        <h2>Featured Spotlight</h2>
+        <p>The events everyone is talking about.</p>
+    </div>
+
+    <div class="featured-card">
+        <img src="https://images.unsplash.com/photo-1506157786151-b8491531f43b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" alt="Concert" class="featured-img">
+        <div class="featured-content">
+            <span class="featured-badge">🔥 Selling Fast</span>
+            <h3 style="font-size: 2.5rem; margin-bottom: 1rem; color: white;">The Royal Jazz Night</h3>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Experience a night of smooth rhythms and soulful melodies under the stars. Featuring international guest artist Julian Moretti.</p>
+            <div style="margin-bottom: 2rem; color: var(--text-muted);">
+                <strong>📍 Grand City Hall</strong> &nbsp;|&nbsp; <strong>📅 March 12, 2026</strong>
+            </div>
+            <a href="#" class="btn-register" style="width: fit-content; text-align: center;">Reserve Seats</a>
+        </div>
+    </div>
+</section>
+
+<section class="events-section" id="upcoming">
+    <div class="section-header">
+        <h2>Upcoming Events</h2>
+        <p>Curated experiences just for you.</p>
+    </div>
+
+    <div class="events-grid">
+        <div class="event-card">
+            <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1503095392237-fc55e3a51367?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="card-body">
+                <span class="date">APR 05, 2026</span>
+                <h3 class="title">Modern Art Expo</h3>
+                <div class="meta">
+                    <span>City Gallery</span>
+                    <span>$15.00</span>
+                </div>
+                <a href="#" class="book-btn" onclick="checkAuth()">Book Now</a>
+            </div>
+        </div>
+        <div class="event-card">
+            <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1459749411177-287ce35e8b4f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="card-body">
+                <span class="date">APR 12, 2026</span>
+                <h3 class="title">Tech Innovation</h3>
+                <div class="meta">
+                    <span>Innovation Hub</span>
+                    <span>Free</span>
+                </div>
+                <a href="#" class="book-btn" onclick="checkAuth()">Register</a>
+            </div>
+        </div>
+        <div class="event-card">
+            <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="card-body">
+                <span class="date">MAY 20, 2026</span>
+                <h3 class="title">Neon Music Fest</h3>
+                <div class="meta">
+                    <span>Central Park</span>
+                    <span>$55.00</span>
+                </div>
+                <a href="#" class="book-btn" onclick="checkAuth()">Book Now</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="view-more-wrapper">
+        <a asp-controller="Events"
+           asp-action="All"
+           class="btn-view-more">
+            View All Events
+        </a>
+    </div>
+
+</section>
+
+<section class="membership-section" id="membership">
+    <div class="section-header">
+        <h2 style="font-size: 3rem;">Become a Member</h2>
+        <p>Join the elite community and unlock VIP access.</p>
+    </div>
+
+    <div class="membership-card">
+        <h3 style="color: var(--accent); letter-spacing: 2px;">PREMIUM ACCESS</h3>
+        <div class="price">$29<span>/year</span></div>
+        <p style="color: white; margin-bottom: 2rem;">The ultimate pass for culture enthusiasts.</p>
+
+        <ul class="benefits-list">
+            <li><div class="check-icon">✓</div> Priority Booking (48h early access)</li>
+            <li><div class="check-icon">✓</div> 10% Discount on all paid events</li>
+            <li><div class="check-icon">✓</div> Exclusive "Meet the Artist" sessions</li>
+            <li><div class="check-icon">✓</div> Free cancellation on workshops</li>
+        </ul>
+
+        <a href="#" class="join-btn">Get Started</a>
+    </div>
+</section>
+
+<script>
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href'))
+                .scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
+    function checkAuth() {
+        let isMember = false;
+        if (!isMember) {
+            if (confirm("Members only. Join now?")) {
+                location.href = "#membership";
+            }
+        } else {
+            alert("Booking successful!");
+        }
+    }
+</script>

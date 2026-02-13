@@ -1,0 +1,266 @@
+﻿@{
+    ViewData["Title"] = "Membership Payment";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            --card-glass: rgba(255, 255, 255, 0.08);
+            --card-border: rgba(255, 255, 255, 0.15);
+            --primary: #8b5cf6;
+            --accent: #f43f5e;
+            --text-main: #ffffff;
+            --text-muted: #cbd5e1;
+            --input-bg: rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .checkout-wrapper {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 10s infinite alternate;
+        }
+
+        .orb-1 {
+            width: 350px;
+            height: 350px;
+            background: var(--primary);
+            top: 5%;
+            left: 20%;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+            bottom: 5%;
+            right: 20%;
+            animation-delay: -5s;
+        }
+
+        .checkout-card {
+            z-index: 5;
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-glass);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            color: white;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .price-tag {
+            color: var(--accent);
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        .credit-card-visual {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 16px;
+            padding: 20px;
+            height: 200px;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .card-chip {
+            width: 45px;
+            height: 35px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 6px;
+        }
+
+        .card-number-display {
+            font-family: monospace;
+            font-size: 1.6rem;
+            letter-spacing: 3px;
+        }
+
+        .card-bottom {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .input-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            color: white;
+        }
+
+        .pay-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 50px;
+            border: none;
+            background: white;
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+            .pay-btn:hover {
+                background: var(--accent);
+                color: white;
+            }
+
+        .secure-text {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+    </style>
+}
+
+<div class="checkout-wrapper">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="checkout-card">
+        <div class="header">
+            <h2>Payment Details</h2>
+            <div class="price-tag">$29.00</div>
+        </div>
+
+        <div class="credit-card-visual">
+            <div class="card-top">
+                <div class="card-chip"></div>
+                <strong>VISA</strong>
+            </div>
+
+            <div class="card-number-display" id="cardNumDisplay">
+                #### #### #### ####
+            </div>
+
+            <div class="card-bottom">
+                <div id="cardNameDisplay">YOUR NAME</div>
+                <div id="cardDateDisplay">MM/YY</div>
+            </div>
+        </div>
+
+        <form asp-controller="Membership"
+              asp-action="PayConfirm"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <div class="input-group">
+                <label class="form-label">Card Number</label>
+                <input class="form-input"
+                       id="cardNumberInput"
+                       placeholder="0000 0000 0000 0000"
+                       maxlength="19"
+                       oninput="formatCardNumber(this); updateCard()"
+                       required />
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">Cardholder Name</label>
+                <input class="form-input"
+                       id="cardNameInput"
+                       placeholder="John Doe"
+                       oninput="updateCard()"
+                       required />
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">Expiry Date</label>
+                <input class="form-input"
+                       id="cardDateInput"
+                       placeholder="MM/YY"
+                       maxlength="5"
+                       oninput="updateCard()"
+                       required />
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">CVV</label>
+                <input class="form-input"
+                       type="password"
+                       placeholder="123"
+                       maxlength="3"
+                       required />
+            </div>
+
+            <button type="submit" class="pay-btn">
+                Confirm Payment
+            </button>
+
+            <div class="secure-text">
+                🔒 SSL Encrypted Transaction
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function formatCardNumber(input) {
+            let value = input.value.replace(/\D/g, '');
+            input.value = value.replace(/(.{4})/g, '$1 ').trim();
+        }
+
+        function updateCard() {
+            document.getElementById('cardNumDisplay').innerText =
+                cardNumberInput.value || '#### #### #### ####';
+
+            document.getElementById('cardNameDisplay').innerText =
+                cardNameInput.value || 'YOUR NAME';
+
+            document.getElementById('cardDateDisplay').innerText =
+                cardDateInput.value || 'MM/YY';
+        }
+    </script>
+}
