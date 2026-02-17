@@ -1,0 +1,198 @@
+﻿@model SmartEventManagement_TicketingSystem.Models.Events.Event
+@using System.Linq
+
+@{
+    ViewData["Title"] = Model.Title;
+    Layout = "~/Views/Shared/_MemberLayout.cshtml";
+    var seats = Model.Seats.ToList();
+}
+
+<div class="det-wrapper">
+    <div class="det-container">
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="det-alert det-alert-success">
+                <i class="fas fa-check-circle"></i> @TempData["Success"]
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="det-alert det-alert-error">
+                <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            </div>
+        }
+
+        <div class="det-grid">
+
+            <div>
+                <div class="det-img-wrapper">
+                    <img src="~/images/events/@Model.ImageUrl" class="det-img" alt="@Model.Title" />
+                </div>
+
+                <div class="det-info">
+                    <h2>@Model.Title</h2>
+                    <div class="det-meta">
+                        <div class="det-meta-item">
+                            <i class="fas fa-tag"></i> @Model.Category?.Name
+                        </div>
+                        <div class="det-meta-item">
+                            <i class="fas fa-map-marker-alt"></i> @Model.Venue?.Name
+                        </div>
+                        <div class="det-meta-item">
+                            <i class="fas fa-calendar-day"></i> @Model.EventDate.ToLongDateString()
+                        </div>
+                    </div>
+
+                    <hr style="margin: 30px 0; border-color: rgba(255,255,255,0.1);">
+
+                    <p style="color: var(--det-text-muted); line-height: 1.8;">
+                        Experience an unforgettable event at the @Model.Venue?.Name. Secure your tickets now before they sell out.
+                        Join us for a night of culture, entertainment, and memories.
+                    </p>
+                </div>
+            </div>
+
+            <div class="det-card">
+                <div class="det-card-title">Select Tickets</div>
+
+                <form asp-action="ProcessPayment" method="post" id="paymentForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="EventId" value="@Model.Id" />
+
+                    @for (int i = 0; i < seats.Count; i++)
+                    {
+                        <div class="det-seat-row">
+                            <div class="det-seat-info">
+                                <strong>@seats[i].SeatType</strong>
+                                <div class="det-seat-price">$@seats[i].Price</div>
+                                <span class="det-seat-avail">Available: @seats[i].Quantity</span>
+                            </div>
+
+                            <input type="hidden" name="Seats[@i].SeatId" value="@seats[i].Id" />
+
+                            <input type="number"
+                                   name="Seats[@i].Quantity"
+                                   min="0"
+                                   max="@seats[i].Quantity"
+                                   value="0"
+                                   class="det-qty-input"
+                                   data-price="@seats[i].Price" />
+                        </div>
+                    }
+
+                    <div class="det-total-section">
+                        <span>Total</span>
+                        <span>$<span id="totalAmount">0.00</span></span>
+                    </div>
+
+                    <button type="button" onclick="openPaymentModal()" class="det-btn-checkout">
+                        Proceed to Checkout <i class="fas fa-arrow-right" style="margin-left:8px;"></i>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="paymentModal" class="det-modal-overlay">
+    <div class="det-modal-card">
+
+        <div class="det-modal-header">
+            <h3>Secure Payment</h3>
+            <i class="fas fa-lock" style="color: #10b981;"></i>
+        </div>
+
+        <div class="det-form-group">
+            <label class="det-label">Cardholder Name</label>
+            <input type="text" id="cardName" class="det-input" placeholder="Name on card" />
+        </div>
+
+        <div class="det-form-group">
+            <label class="det-label">Card Number</label>
+            <div style="position:relative;">
+                <input type="text" id="cardNumber" maxlength="16" class="det-input" placeholder="0000 0000 0000 0000" />
+                <i class="far fa-credit-card" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); opacity:0.5;"></i>
+            </div>
+        </div>
+
+        <div class="det-row">
+            <div class="det-form-group" style="flex:1;">
+                <label class="det-label">Expiry</label>
+                <input type="text" id="cardExpiry" class="det-input" placeholder="MM/YY" />
+            </div>
+            <div class="det-form-group" style="flex:1;">
+                <label class="det-label">CVV</label>
+                <input type="text" id="cardCvv" maxlength="3" class="det-input" placeholder="123" />
+            </div>
+        </div>
+
+        <button type="button" onclick="submitPayment()" class="det-btn-pay">
+            Pay $<span id="modalTotal">0.00</span>
+        </button>
+
+        <button type="button" onclick="closePaymentModal()" class="det-btn-cancel">
+            Cancel
+        </button>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const inputs = document.querySelectorAll(".det-qty-input");
+        const totalDisplay = document.getElementById("totalAmount");
+        const modalTotal = document.getElementById("modalTotal");
+        const modalOverlay = document.getElementById("paymentModal");
+
+        function calculateTotal() {
+            let total = 0;
+            inputs.forEach(input => {
+                const qty = parseInt(input.value) || 0;
+                const price = parseFloat(input.dataset.price);
+                total += qty * price;
+            });
+            const totalStr = total.toFixed(2);
+            totalDisplay.textContent = totalStr;
+            modalTotal.textContent = totalStr;
+        }
+
+        inputs.forEach(input => {
+            input.addEventListener("input", calculateTotal);
+        });
+
+        function openPaymentModal() {
+            const total = parseFloat(totalDisplay.textContent);
+            if (total <= 0) {
+                alert("Please select at least one ticket to proceed.");
+                return;
+            }
+            modalOverlay.classList.add("active");
+        }
+
+        function closePaymentModal() {
+            modalOverlay.classList.remove("active");
+        }
+
+        function submitPayment() {
+            const cardNumber = document.getElementById("cardNumber").value;
+            const expiry = document.getElementById("cardExpiry").value;
+            const cvv = document.getElementById("cardCvv").value;
+            const name = document.getElementById("cardName").value;
+
+            if (!cardNumber || !expiry || !cvv || !name) {
+                alert("Please fill all payment details.");
+                return;
+            }
+
+            if (cardNumber.length < 16) {
+                alert("Invalid card number. Must be 16 digits.");
+                return;
+            }
+
+            // Submit the real form
+            document.getElementById("paymentForm").submit();
+        }
+    </script>
+}

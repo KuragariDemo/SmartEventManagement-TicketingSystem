@@ -1,0 +1,103 @@
+﻿@model IEnumerable<SmartEventManagement_TicketingSystem.Models.Venue>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="adminvenues-wrapper">
+
+    <div class="adminvenues-header">
+        <i class="fas fa-map-marked-alt" style="font-size: 2rem; color: var(--av-primary);"></i>
+        <div>
+            <h2>Manage Venues</h2>
+            <span style="color: var(--av-text-muted);">Add and manage event locations.</span>
+        </div>
+    </div>
+
+    <div class="adminvenues-grid">
+
+        <div class="adminvenues-card">
+            <h3><i class="fas fa-plus-square"></i> Add New Venue</h3>
+
+            <form asp-action="AddVenue" method="post">
+
+                <div class="adminvenues-form-group">
+                    <label class="adminvenues-label">Venue Name</label>
+                    <div class="adminvenues-input-wrapper">
+                        <i class="fas fa-building adminvenues-input-icon"></i>
+                        <input type="text" name="Name" class="adminvenues-input" placeholder="e.g. Grand Hall" required />
+                    </div>
+                </div>
+
+                <div class="adminvenues-form-group">
+                    <label class="adminvenues-label">Location / Address</label>
+                    <div class="adminvenues-input-wrapper">
+                        <i class="fas fa-map-marker-alt adminvenues-input-icon"></i>
+                        <input type="text" name="Location" class="adminvenues-input" placeholder="e.g. 123 Main St, Metro City" required />
+                    </div>
+                </div>
+
+                <button type="submit" class="adminvenues-btn-add">
+                    <i class="fas fa-save"></i> Save Venue
+                </button>
+            </form>
+        </div>
+
+        <div class="adminvenues-card">
+            <h3><i class="fas fa-list-ul"></i> Existing Venues</h3>
+
+            @if (Model.Any())
+            {
+                <div class="adminvenues-table-container">
+                    <table class="adminvenues-table">
+                        <thead>
+                            <tr>
+                                <th>Venue Name</th>
+                                <th>Location</th>
+                                <th style="width: 180px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var venue in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div style="width: 30px; height: 30px; background: rgba(139, 92, 246, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--av-primary); font-size: 0.8rem;">
+                                                <i class="fas fa-building"></i>
+                                            </div>
+                                            @venue.Name
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span style="color: var(--av-text-muted); font-size: 0.9rem;">
+                                            <i class="fas fa-map-pin" style="margin-right: 5px;"></i> @venue.Location
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="adminvenues-actions">
+                                            <a asp-action="EditVenue" asp-route-id="@venue.Id" class="adminvenues-btn-edit">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                            <a asp-action="DeleteVenue" asp-route-id="@venue.Id" class="adminvenues-btn-delete" onclick="return confirm('Are you sure you want to delete this venue?')">
+                                                <i class="fas fa-trash-alt"></i> Delete
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div style="text-align: center; padding: 40px; color: var(--av-text-muted);">
+                    <i class="fas fa-map-marked-alt" style="font-size: 2.5rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                    <p>No venues found. Add one to get started!</p>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>

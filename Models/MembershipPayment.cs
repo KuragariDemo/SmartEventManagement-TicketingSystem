@@ -4,7 +4,7 @@ public class MembershipPayment
 {
     public int Id { get; set; }
 
-    public string UserId { get; set; }
+    public required string UserId { get; set; }
     public SmartEventManagement_TicketingSystemUser User { get; set; }
 
     public decimal Amount { get; set; }

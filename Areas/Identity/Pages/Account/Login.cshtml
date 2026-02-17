@@ -80,7 +80,9 @@
             .auth-logo span {
                 background: linear-gradient(to right, var(--primary), var(--accent));
                 -webkit-background-clip: text;
+                background-clip: text; /* This line will be ignored by most browsers except WebKit */
                 -webkit-text-fill-color: transparent;
+                color: transparent;
             }
 
         .auth-subtitle {

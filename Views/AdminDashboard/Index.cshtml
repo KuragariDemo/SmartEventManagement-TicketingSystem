@@ -1,0 +1,146 @@
+﻿@model AdminDashboardViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admindash-wrapper">
+
+    <div class="admindash-header">
+        <h2>
+            <i class="fas fa-tachometer-alt" style="color: var(--ad-primary);"></i>
+            <span>Admin Dashboard</span>
+        </h2>
+    </div>
+
+    <div class="admindash-stats-grid">
+
+        <div class="admindash-card">
+            <div class="admindash-card-title">
+                <i class="fas fa-tags"></i> Active Categories
+            </div>
+
+            @if (Model.Categories.Any())
+            {
+                <div class="admindash-chip-container">
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <span class="admindash-chip">
+                            <i class="fas fa-tag" style="font-size: 0.7rem;"></i> @cat
+                        </span>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="admindash-empty">No categories defined yet.</p>
+            }
+        </div>
+
+        <div class="admindash-card">
+            <div class="admindash-card-title">
+                <i class="fas fa-map-marker-alt"></i> Available Locations
+            </div>
+
+            @if (Model.Locations.Any())
+            {
+                <div class="admindash-chip-container">
+                    @foreach (var loc in Model.Locations)
+                    {
+                        <span class="admindash-chip admindash-chip-location">
+                            <i class="fas fa-map-pin" style="font-size: 0.7rem;"></i> @loc
+                        </span>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="admindash-empty">No locations defined yet.</p>
+            }
+        </div>
+
+    </div>
+
+    <h3 class="admindash-section-title">
+        <i class="fas fa-calendar-alt" style="color: #38bdf8;"></i> Upcoming Events
+    </h3>
+
+    <div class="admindash-table-wrapper">
+        @if (Model.UpcomingEvents.Any())
+        {
+            <table class="admindash-table">
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">Title</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Location</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ev in Model.UpcomingEvents)
+                    {
+                        <tr>
+                            <td style="font-weight: 600; color: white;">@ev.Title</td>
+                            <td>@ev.EventDate.ToString("MMM dd, yyyy")</td>
+                            <td>@ev.Category?.Name</td>
+                            <td>$@ev.Price</td>
+                            <td><span class="admindash-status-upcoming">Active</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div style="padding: 40px; text-align: center; color: var(--ad-text-muted);">
+                <i class="far fa-calendar-times" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5;"></i>
+                <p>No upcoming events scheduled.</p>
+            </div>
+        }
+    </div>
+
+    <h3 class="admindash-section-title">
+        <i class="fas fa-history" style="color: #94a3b8;"></i> Finished Events
+    </h3>
+
+    <div class="admindash-table-wrapper">
+        @if (Model.FinishedEvents.Any())
+        {
+            <table class="admindash-table">
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">Title</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Location</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ev in Model.FinishedEvents)
+                    {
+                        <tr style="opacity: 0.7;">
+                            <td>@ev.Title</td>
+                            <td>@ev.EventDate.ToString("MMM dd, yyyy")</td>
+                            <td>@ev.Category?.Name</td>
+                            <td>$@ev.Price</td>
+                            <td><span class="admindash-status-finished">Completed</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div style="padding: 40px; text-align: center; color: var(--ad-text-muted);">
+                <i class="fas fa-archive" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5;"></i>
+                <p>No past events found in archive.</p>
+            </div>
+        }
+    </div>
+
+</div>

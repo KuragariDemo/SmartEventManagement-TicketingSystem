@@ -5,10 +5,11 @@ using System.Collections.Generic;
 
 public class EventSearchViewModel
 {
-    public List<Event> Events { get; set; }
+    public List<Event> Events { get; set; } = new();
 
-    public string SearchCategory { get; set; }
-    public string SearchLocation { get; set; }
+    public string SearchCategory { get; set; } = string.Empty;
+    public string SearchLocation { get; set; } = string.Empty;
+
     public DateTime? SearchDate { get; set; }
     public decimal? MaxPrice { get; set; }
 }

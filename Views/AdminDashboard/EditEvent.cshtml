@@ -1,0 +1,111 @@
+﻿@model SmartEventManagement_TicketingSystem.Models.Events.Event
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admineditevt-wrapper">
+    <div class="admineditevt-card">
+
+        <div class="admineditevt-header">
+            <i class="fas fa-edit" style="font-size: 2rem; color: var(--aee-primary); margin-bottom: 10px;"></i>
+            <h2>Edit Event Details</h2>
+        </div>
+
+        <form asp-action="EditEvent" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="admineditevt-grid">
+
+                <div class="admineditevt-form-group admineditevt-full-width">
+                    <label class="admineditevt-label">Event Title</label>
+                    <input asp-for="Title" class="admineditevt-input" placeholder="e.g. Summer Music Festival" required />
+                </div>
+
+                <div class="admineditevt-form-group">
+                    <label class="admineditevt-label">Category</label>
+                    <select asp-for="CategoryId" class="admineditevt-input">
+                        @if (ViewBag.Categories != null)
+                        {
+                            foreach (var category in ViewBag.Categories)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="admineditevt-form-group">
+                    <label class="admineditevt-label">Venue</label>
+                    <select asp-for="VenueId" class="admineditevt-input">
+                        @if (ViewBag.Venues != null)
+                        {
+                            foreach (var venue in ViewBag.Venues)
+                            {
+                                <option value="@venue.Id">@venue.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="admineditevt-form-group">
+                    <label class="admineditevt-label">Event Date</label>
+                    <input asp-for="EventDate" type="date" class="admineditevt-input" required />
+                </div>
+
+                <div class="admineditevt-form-group">
+                    <label class="admineditevt-label">Price ($)</label>
+                    <input asp-for="Price" type="number" step="0.01" class="admineditevt-input" required />
+                </div>
+
+                <div class="admineditevt-form-group admineditevt-full-width">
+                    <label class="admineditevt-label">Image URL</label>
+                    <input asp-for="ImageUrl" id="imgUrlInput" class="admineditevt-input" placeholder="https://example.com/image.jpg" oninput="updatePreview()" />
+
+                    <div class="admineditevt-img-preview" id="imgPreviewBox">
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <img src="@Model.ImageUrl" alt="Event Preview" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <div class="admineditevt-placeholder" style="display:none;">
+                                <i class="fas fa-image" style="font-size: 1.5rem;"></i>
+                                <span>Image load failed</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="admineditevt-placeholder">
+                                <i class="fas fa-image" style="font-size: 1.5rem;"></i>
+                                <span>Preview will appear here</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="admineditevt-actions">
+                <a asp-action="CreateEvent" class="admineditevt-btn-cancel">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" class="admineditevt-btn-save">
+                    <i class="fas fa-save"></i> Update Event
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<script>
+    function updatePreview() {
+        const url = document.getElementById('imgUrlInput').value;
+        const previewBox = document.getElementById('imgPreviewBox');
+
+        if (url) {
+            previewBox.innerHTML = `<img src="${url}" alt="Preview" style="width:100%; height:100%; object-fit:cover;" onerror="this.parentElement.innerHTML='<div class=\'admineditevt-placeholder\'><i class=\'fas fa-exclamation-triangle\'></i><span>Invalid Image URL</span></div>'" />`;
+        } else {
+            previewBox.innerHTML = `<div class="admineditevt-placeholder"><i class="fas fa-image" style="font-size: 1.5rem;"></i><span>Preview will appear here</span></div>`;
+        }
+    }
+</script>

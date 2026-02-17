@@ -35,7 +35,7 @@ namespace SmartEventManagement_TicketingSystem.Areas.Identity.Pages.Account
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
-        public string ReturnUrl { get; set; }
+        public string ReturnUrl { get; set; } = string.Empty;
 
         [TempData]
         public string ErrorMessage { get; set; }
@@ -94,11 +94,11 @@ namespace SmartEventManagement_TicketingSystem.Areas.Identity.Pages.Account
 
                 var user = await _userManager.FindByEmailAsync(Input.Email);
 
-                // 🔐 Role-based redirect
-                if (await _userManager.IsInRoleAsync(user, "Admin"))
+                if (user != null && await _userManager.IsInRoleAsync(user, "Admin"))
                 {
-                    return RedirectToAction("Dashboard", "Admin");
+                    return RedirectToAction("Index", "AdminDashboard");
                 }
+
 
                 // Default: Member
                 return LocalRedirect(returnUrl);

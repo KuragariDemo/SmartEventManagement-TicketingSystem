@@ -1,0 +1,42 @@
+﻿@model SmartEventManagement_TicketingSystem.Models.Category
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admincatedit-wrapper">
+    <div class="admincatedit-card">
+
+        <div class="admincatedit-header">
+            <i class="fas fa-edit" style="font-size: 2.5rem; color: var(--ace-primary); margin-bottom: 15px;"></i>
+            <h2>Edit Category</h2>
+            <p>Update the category details below.</p>
+        </div>
+
+        <form asp-action="EditCategory" method="post">
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="admincatedit-form-group">
+                <label class="admincatedit-label">Category Name</label>
+                <div class="admincatedit-input-wrapper">
+                    <input asp-for="Name" class="admincatedit-input" placeholder="e.g. Music" required />
+                    <i class="fas fa-tag admincatedit-input-icon"></i>
+                </div>
+                <span asp-validation-for="Name" class="text-danger" style="font-size: 0.8rem; margin-top: 5px; display: block;"></span>
+            </div>
+
+            <div class="admincatedit-actions">
+                <a asp-action="AddCategory" class="admincatedit-btn-cancel">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+
+                <button type="submit" class="admincatedit-btn-save">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>

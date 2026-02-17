@@ -1,0 +1,101 @@
+﻿@model List<Ticket>
+@{
+    Layout = "~/Views/Shared/_MemberLayout.cshtml";
+    ViewData["Title"] = "My Tickets";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<<div class="mytickets-wrapper">
+
+    <div class="mytickets-header">
+        <h2>
+            <i class="fas fa-ticket-alt" style="margin-right: 10px; color: var(--mt-primary);"></i>
+            My Tickets
+        </h2>
+    </div>
+
+@if (TempData["Success"] != null)
+{
+        <div class="mytickets-alert mytickets-alert-success">
+            <i class="fas fa-check-circle"></i> @TempData["Success"]
+        </div>
+}
+
+@if (TempData["Error"] != null)
+{
+        <div class="mytickets-alert mytickets-alert-error">
+            <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+        </div>
+}
+
+@if (!Model.Any())
+{
+        <div class="mytickets-empty">
+            <i class="fas fa-receipt"></i>
+            <h3>No tickets found</h3>
+            <p>You haven't purchased any tickets yet. <a href="@Url.Action("Events", "Member")" style="color:var(--mt-primary);">Browse Events</a></p>
+        </div>
+}
+else
+{
+        <div class="mytickets-grid">
+            @foreach (var ticket in Model)
+            {
+                bool isPastEvent = ticket.Event.EventDate < DateTime.Now;
+
+                <div class="mytickets-card">
+                    <div class="mytickets-status-stripe @(isPastEvent ? "mytickets-stripe-past" : "mytickets-stripe-upcoming")"></div>
+
+                    <div class="mytickets-body">
+                        <span class="mytickets-date-badge">
+                            @ticket.Event.EventDate.ToString("MMM dd, yyyy")
+                        </span>
+
+                        <h4 class="mytickets-title">@ticket.Event.Title</h4>
+
+                        <div class="mytickets-info-row">
+                            <span><i class="fas fa-users"></i> Quantity</span>
+                            <span class="mytickets-value">@ticket.Quantity</span>
+                        </div>
+                        <div class="mytickets-info-row">
+                            <span><i class="fas fa-tag"></i> Total Paid</span>
+                            <span class="mytickets-value">$@ticket.TotalAmount</span>
+                        </div>
+                    </div>
+
+                    <div class="mytickets-footer">
+                        @if (isPastEvent)
+                        {
+                            <form asp-action="SubmitFeedback" method="post">
+                                <input type="hidden" name="eventId" value="@ticket.EventId" />
+
+                                <label class="mytickets-form-label">How was the experience?</label>
+                                <div class="mytickets-input-group">
+                                    <select name="rating" class="mytickets-select" required>
+                                        <option value="">Rate...</option>
+                                        <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                                        <option value="4">⭐⭐⭐⭐ Good</option>
+                                        <option value="3">⭐⭐⭐ Average</option>
+                                        <option value="2">⭐⭐ Poor</option>
+                                        <option value="1">⭐ Terrible</option>
+                                    </select>
+                                    <button type="submit" class="mytickets-btn-rate">
+                                        Submit
+                                    </button>
+                                </div>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="mytickets-msg-wait">
+                                <i class="fas fa-clock"></i> Feedback available after event.
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+}
+
+</div>

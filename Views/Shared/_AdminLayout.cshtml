@@ -1,0 +1,88 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="admin-dashboard-wrapper">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+
+        <div class="admin-sidebar-header">
+            <h3>Admin Panel</h3>
+        </div>
+
+        <ul class="admin-nav-list">
+
+            <li class="admin-nav-item">
+                <a asp-controller="AdminDashboard"
+                   asp-action="Index"
+                   class="@(currentAction == "Index" ? "active" : "")">
+                    <i class="fas fa-chart-line" style="width:20px;"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li class="admin-nav-item">
+                <a asp-controller="AdminDashboard"
+                   asp-action="AddAdmin"
+                   class="@(currentAction == "AddAdmin" ? "active" : "")">
+                    <i class="fas fa-user-shield" style="width:20px;"></i>
+                    Add Admin
+                </a>
+            </li>
+
+            <li class="admin-nav-item">
+                <a asp-controller="AdminDashboard"
+                   asp-action="CreateEvent"
+                   class="@(currentAction == "CreateEvent" ? "active" : "")">
+                    <i class="fas fa-calendar-plus" style="width:20px;"></i>
+                    Create Event
+                </a>
+            </li>
+
+            <li class="admin-nav-item">
+                <a asp-controller="AdminDashboard"
+                   asp-action="AddVenue"
+                   class="@(currentAction == "AddVenue" ? "active" : "")">
+                    <i class="fas fa-map-marker-alt" style="width:20px;"></i>
+                    Add Venue
+                </a>
+            </li>
+
+
+            <li class="admin-nav-item">
+                <a asp-controller="AdminDashboard"
+                   asp-action="AddCategory"
+                   class="@(currentAction == "AddCategory" ? "active" : "")">
+                    <i class="fas fa-tags" style="width:20px;"></i>
+                    Add Category
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="admin-sidebar-footer">
+            <ul class="admin-nav-list">
+                <li class="admin-nav-item">
+                    <a asp-area="Identity"
+                       asp-page="/Account/Logout">
+                        <i class="fas fa-sign-out-alt" style="width:20px;"></i>
+                        Sign Out
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </aside>
+
+    <!-- Page Content -->
+    <div class="admin-main-content">
+        @RenderBody()
+    </div>
+
+</div>
+
+@RenderSection("Scripts", required: false)

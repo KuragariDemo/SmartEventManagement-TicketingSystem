@@ -1,0 +1,51 @@
+﻿@model SmartEventManagement_TicketingSystem.Models.Venue
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="adminvenedit-wrapper">
+    <div class="adminvenedit-card">
+
+        <div class="adminvenedit-header">
+            <i class="fas fa-map-marked-alt" style="font-size: 2.5rem; color: var(--ave-primary); margin-bottom: 15px;"></i>
+            <h2>Edit Venue</h2>
+            <p>Update the venue details below.</p>
+        </div>
+
+        <form asp-action="EditVenue" method="post">
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="adminvenedit-form-group">
+                <label class="adminvenedit-label">Venue Name</label>
+                <div class="adminvenedit-input-wrapper">
+                    <input asp-for="Name" class="adminvenedit-input" placeholder="e.g. Grand Hall" required />
+                    <i class="fas fa-building adminvenedit-input-icon"></i>
+                </div>
+                <span asp-validation-for="Name" class="text-danger" style="font-size: 0.8rem; margin-top: 5px; display: block;"></span>
+            </div>
+
+            <div class="adminvenedit-form-group">
+                <label class="adminvenedit-label">Location / Address</label>
+                <div class="adminvenedit-input-wrapper">
+                    <input asp-for="Location" class="adminvenedit-input" placeholder="e.g. 123 Main St, Metro City" required />
+                    <i class="fas fa-map-marker-alt adminvenedit-input-icon"></i>
+                </div>
+                <span asp-validation-for="Location" class="text-danger" style="font-size: 0.8rem; margin-top: 5px; display: block;"></span>
+            </div>
+
+            <div class="adminvenedit-actions">
+                <a asp-action="AddVenue" class="adminvenedit-btn-cancel">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+
+                <button type="submit" class="adminvenedit-btn-save">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
