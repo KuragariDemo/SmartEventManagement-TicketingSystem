@@ -14,6 +14,9 @@ namespace SmartEventManagement_TicketingSystem.Models.Events
 
         public DateTime EventDate { get; set; }
 
+        [DataType(DataType.Time)]
+        public TimeSpan EventTime { get; set; }
+
         public decimal Price { get; set; }   // ✅ FIXED
 
         public int CategoryId { get; set; }  // FK

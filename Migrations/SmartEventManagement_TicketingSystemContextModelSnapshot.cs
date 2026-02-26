@@ -329,6 +329,9 @@ namespace SmartEventManagement_TicketingSystem.Migrations
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<TimeSpan>("EventTime")
+                        .HasColumnType("time");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 

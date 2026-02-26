@@ -4,7 +4,7 @@
 @{
     ViewData["Title"] = Model.Title;
     Layout = "~/Views/Shared/_MemberLayout.cshtml";
-    var seats = Model.Seats.ToList();
+    var seats = Model.Seats?.ToList() ?? new List<SmartEventManagement_TicketingSystem.Models.Events.EventSeat>();
 }
 
 <div class="det-wrapper">
@@ -25,34 +25,48 @@
 
         <div class="det-grid">
 
+            <!-- LEFT SIDE -->
             <div>
                 <div class="det-img-wrapper">
-                    <img src="~/images/events/@Model.ImageUrl" class="det-img" alt="@Model.Title" />
+                    <img src="@(string.IsNullOrEmpty(Model.ImageUrl)
+                                                          ? "/images/no-image.png"
+                                                          : "/images/events/" + Model.ImageUrl)"
+                         class="det-img"
+                         alt="@Model.Title" />
                 </div>
 
                 <div class="det-info">
                     <h2>@Model.Title</h2>
+
                     <div class="det-meta">
                         <div class="det-meta-item">
                             <i class="fas fa-tag"></i> @Model.Category?.Name
                         </div>
+
                         <div class="det-meta-item">
                             <i class="fas fa-map-marker-alt"></i> @Model.Venue?.Name
                         </div>
+
+                        <!-- ✅ DATE + TIME -->
                         <div class="det-meta-item">
-                            <i class="fas fa-calendar-day"></i> @Model.EventDate.ToLongDateString()
+                            <i class="fas fa-calendar-day"></i>
+                            @Model.EventDate.ToString("MMMM dd, yyyy")
+                            •
+                            @Model.EventDate.ToString("hh:mm tt")
                         </div>
                     </div>
 
                     <hr style="margin: 30px 0; border-color: rgba(255,255,255,0.1);">
 
                     <p style="color: var(--det-text-muted); line-height: 1.8;">
-                        Experience an unforgettable event at the @Model.Venue?.Name. Secure your tickets now before they sell out.
+                        Experience an unforgettable event at the @Model.Venue?.Name.
+                        Secure your tickets now before they sell out.
                         Join us for a night of culture, entertainment, and memories.
                     </p>
                 </div>
             </div>
 
+            <!-- RIGHT SIDE -->
             <div class="det-card">
                 <div class="det-card-title">Select Tickets</div>
 
@@ -87,7 +101,8 @@
                     </div>
 
                     <button type="button" onclick="openPaymentModal()" class="det-btn-checkout">
-                        Proceed to Checkout <i class="fas fa-arrow-right" style="margin-left:8px;"></i>
+                        Proceed to Checkout
+                        <i class="fas fa-arrow-right" style="margin-left:8px;"></i>
                     </button>
                 </form>
             </div>
@@ -96,6 +111,7 @@
     </div>
 </div>
 
+<!-- PAYMENT MODAL -->
 <div id="paymentModal" class="det-modal-overlay">
     <div class="det-modal-card">
 
@@ -112,8 +128,11 @@
         <div class="det-form-group">
             <label class="det-label">Card Number</label>
             <div style="position:relative;">
-                <input type="text" id="cardNumber" maxlength="16" class="det-input" placeholder="0000 0000 0000 0000" />
-                <i class="far fa-credit-card" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); opacity:0.5;"></i>
+                <input type="text" id="cardNumber" maxlength="16"
+                       class="det-input"
+                       placeholder="0000 0000 0000 0000" />
+                <i class="far fa-credit-card"
+                   style="position:absolute; right:15px; top:50%; transform:translateY(-50%); opacity:0.5;"></i>
             </div>
         </div>
 
@@ -191,7 +210,6 @@
                 return;
             }
 
-            // Submit the real form
             document.getElementById("paymentForm").submit();
         }
     </script>

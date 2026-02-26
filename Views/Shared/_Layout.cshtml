@@ -43,10 +43,10 @@
                 </li>
 
                 <li class="profile-wrapper">
-                    <a asp-area="Identity"
-                       asp-page="/Account/Manage/Index"
+                    <a asp-controller="MemberDashboard"
+                       asp-action="Index"
                        class="profile-circle">
-                       @User.Identity.Name.Substring(0, 1).ToUpper()
+                        @User.Identity.Name.Substring(0, 1).ToUpper()
                     </a>
                 </li>
 

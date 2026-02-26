@@ -16,6 +16,7 @@
 
     <div class="adminevt-grid">
 
+        <!-- ================= CREATE EVENT ================= -->
         <div class="adminevt-card">
             <h3><i class="fas fa-plus-circle"></i> Create New Event</h3>
 
@@ -29,10 +30,10 @@
                 <div class="adminevt-form-group">
                     <label class="adminevt-label">Category</label>
                     <select name="CategoryId" class="adminevt-input" required>
-                        <option value="" style="background: #1e293b; color: gray;">-- Select Category --</option>
+                        <option value="" style="background:#1e293b;color:gray;">-- Select Category --</option>
                         @foreach (var category in ViewBag.Categories)
                         {
-                            <option value="@category.Id" style="background: #1e293b;">@category.Name</option>
+                            <option value="@category.Id" style="background:#1e293b;">@category.Name</option>
                         }
                     </select>
                 </div>
@@ -40,25 +41,29 @@
                 <div class="adminevt-form-group">
                     <label class="adminevt-label">Venue</label>
                     <select name="VenueId" class="adminevt-input" required>
-                        <option value="" style="background: #1e293b; color: gray;">-- Select Venue --</option>
+                        <option value="" style="background:#1e293b;color:gray;">-- Select Venue --</option>
                         @foreach (var venue in ViewBag.Venues)
                         {
-                            <option value="@venue.Id" style="background: #1e293b;">@venue.Name</option>
+                            <option value="@venue.Id" style="background:#1e293b;">@venue.Name</option>
                         }
                     </select>
                 </div>
 
+                <!-- ✅ DATE + TIME -->
                 <div class="adminevt-form-group">
-                    <label class="adminevt-label">Event Date</label>
-                    <input type="date" name="EventDate" class="adminevt-input" required />
+                    <label class="adminevt-label">Event Date & Time</label>
+                    <input type="datetime-local"
+                           name="EventDate"
+                           class="adminevt-input"
+                           required />
                 </div>
 
+                <!-- ================= SEATS ================= -->
                 <div class="adminevt-form-group adminevt-full-width">
                     <label class="adminevt-label">Seat Configuration</label>
 
                     <div style="display:flex; gap:20px; flex-wrap:wrap;">
 
-                        <!-- EGO -->
                         <div>
                             <label>EGO Quantity</label>
                             <input type="number" name="EgoQuantity" class="adminevt-input" min="0" value="0" />
@@ -67,7 +72,6 @@
                             <input type="number" step="0.01" name="EgoPrice" class="adminevt-input" min="0" value="0" />
                         </div>
 
-                        <!-- VIP -->
                         <div>
                             <label>VIP Quantity</label>
                             <input type="number" name="VipQuantity" class="adminevt-input" min="0" value="0" />
@@ -76,7 +80,6 @@
                             <input type="number" step="0.01" name="VipPrice" class="adminevt-input" min="0" value="0" />
                         </div>
 
-                        <!-- VVIP -->
                         <div>
                             <label>VVIP Quantity</label>
                             <input type="number" name="VvipQuantity" class="adminevt-input" min="0" value="0" />
@@ -100,6 +103,7 @@
             </form>
         </div>
 
+        <!-- ================= EVENTS TABLE ================= -->
         <div class="adminevt-card">
             <h3><i class="fas fa-list-ul"></i> All Events</h3>
 
@@ -110,10 +114,10 @@
                             <th>Title</th>
                             <th>Category</th>
                             <th>Venue</th>
-                            <th>Date</th>
+                            <th>Date & Time</th>
                             <th>Seats</th>
                             <th>Status</th>
-                            <th style="text-align: right;">Action</th>
+                            <th style="text-align:right;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -121,28 +125,42 @@
                         {
                             @foreach (var ev in Model)
                             {
-                                var isFinished = ev.EventDate < DateTime.Today;
+                                var isFinished = ev.EventDate < DateTime.Now;
 
                                 <tr>
-                                    <td style="font-weight: 600; color: white;">@ev.Title</td>
+                                    <td style="font-weight:600;color:white;">@ev.Title</td>
                                     <td>@ev.Category?.Name</td>
                                     <td>@ev.Venue?.Name</td>
-                                    <td>@ev.EventDate.ToShortDateString()</td>
-                                    <td>$@ev.Price</td>
+
+                                    <!-- ✅ DATE + TIME DISPLAY -->
+                                    <td>
+                                        @ev.EventDate.ToString("dd MMM yyyy")
+                                        <br />
+                                        <small style="color:var(--ae-text-muted);">
+                                            @ev.EventDate.ToString("hh:mm tt")
+                                        </small>
+                                    </td>
+
+                                    <!-- ✅ SEATS -->
                                     <td>
                                         @if (ev.Seats != null && ev.Seats.Any())
                                         {
                                             foreach (var seat in ev.Seats)
                                             {
                                                 <div>
-                                                    @seat.SeatType
-                                                    - Qty: @seat.Quantity
-                                                    - $@seat.Price
+                                                    <strong>@seat.SeatType</strong>
+                                                    — Qty: @seat.Quantity
+                                                    — $@seat.Price
                                                 </div>
                                             }
                                         }
+                                        else
+                                        {
+                                            <span style="color:var(--ae-text-muted);">No seats</span>
+                                        }
                                     </td>
 
+                                    <!-- ✅ STATUS -->
                                     <td>
                                         @if (isFinished)
                                         {
@@ -153,12 +171,22 @@
                                             <span class="adminevt-status-upcoming">Upcoming</span>
                                         }
                                     </td>
+
+                                    <!-- ✅ ACTIONS -->
                                     <td>
-                                        <div class="adminevt-actions" style="justify-content: flex-end;">
-                                            <a asp-action="EditEvent" asp-route-id="@ev.Id" class="adminevt-btn-action adminevt-btn-edit" title="Edit">
+                                        <div class="adminevt-actions" style="justify-content:flex-end;">
+                                            <a asp-action="EditEvent"
+                                               asp-route-id="@ev.Id"
+                                               class="adminevt-btn-action adminevt-btn-edit"
+                                               title="Edit">
                                                 <i class="fas fa-pen"></i>
                                             </a>
-                                            <a asp-action="DeleteEvent" asp-route-id="@ev.Id" class="adminevt-btn-action adminevt-btn-delete" title="Delete" onclick="return confirm('Are you sure?')">
+
+                                            <a asp-action="DeleteEvent"
+                                               asp-route-id="@ev.Id"
+                                               class="adminevt-btn-action adminevt-btn-delete"
+                                               title="Delete"
+                                               onclick="return confirm('Are you sure?')">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </div>
@@ -169,7 +197,7 @@
                         else
                         {
                             <tr>
-                                <td colspan="7" style="text-align: center; padding: 40px; color: var(--ae-text-muted);">
+                                <td colspan="7" style="text-align:center;padding:40px;color:var(--ae-text-muted);">
                                     No events created yet.
                                 </td>
                             </tr>
